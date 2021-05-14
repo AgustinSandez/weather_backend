@@ -14,6 +14,5 @@ RUN pip install -r requirements.txt
 
 COPY . /app
 
-ENTRYPOINT [ "python" ]
-
-CMD [ "main.py" ]
+ENV FLASK_APP /app/main.py
+CMD export FLASK_APP=main.py && flask run
