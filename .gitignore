@@ -1,2 +1,2 @@
-src/weather.db
-src/__pycache__/
+weather.db
+__pycache__/
