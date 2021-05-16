@@ -27,6 +27,22 @@ class Day(db.Model):
 
         return self
 
+    def load_from_json(self, day):
+        self.date = datetime.strptime(day['date'], '%Y-%m-%d').date()
+        self.temperature_max = day['temperature_max']
+        self.temperature_min = day['temperature_min']
+        self.icon = day['icon']
+        self.text = day['text']
+        self.humidity = day['humidity']
+        self.wind = day['wind']
+        self.wind_direction = day['wind_direction']
+        self.icon_wind = day['icon_wind']
+        self.sunrise = day['sunrise']
+        self.sunset = day['sunset']
+        self.moonrise = day['moonrise']
+        self.moonset = day['moonset']
+        self.moon_phases_icon = day['moon_phases_icon']
+
     def json(self):
             return {
                 'date': self.date,
