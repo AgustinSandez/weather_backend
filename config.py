@@ -8,10 +8,9 @@ class DevelopmentConfig(Config):
 
 TUTIEMPO_API_LANG = 'es'
 TUTIEMPO_API_ID = 'awYXaXqqzaX7wwg'
-TUTIEMPO_API_CITY = '3768'
 
 config = {
     'development': DevelopmentConfig,
-    'tutiempo_url': 'https://api.tutiempo.net/json/?lan={}&apid={}&lid={}'
-        .format(TUTIEMPO_API_LANG, TUTIEMPO_API_ID, TUTIEMPO_API_CITY)
+    'tutiempo_url': 'https://api.tutiempo.net/json/?lan={}&apid={}&lid={{}}'
+        .format(TUTIEMPO_API_LANG, TUTIEMPO_API_ID)
 }

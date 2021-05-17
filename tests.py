@@ -16,6 +16,7 @@ def test_client():
 def test_day_load_from_json():
     json = {
                 "date":"2021-05-20",
+                "location": 3768,
                 "humidity":47,
                 "icon":"2",
                 "icon_wind":"SO",
@@ -34,6 +35,7 @@ def test_day_load_from_json():
     day.load_from_json(json)
 
     assert day.date == datetime(2021, 5, 20).date()
+    assert day.location == 3768
     assert day.humidity == 47
     assert day.icon == "2"
     assert day.icon_wind == "SO"
@@ -56,11 +58,15 @@ def test_get_days_200(test_client):
     response = test_client.get('/days')
     assert response.status_code == 200
 
-def test_get_fake_day(test_client):
-    response = test_client.get('/days/1900-01-01')
-    assert response.status_code == 404
-
 def test_get_days(test_client):
     response = test_client.get('/days')
     assert response.status_code == 200
-    assert b'days' in response.data
+    assert 'days' in response.json
+
+def test_get_days_by_location(test_client):
+    location = '3768'
+    response = test_client.get('/days/' + location)
+    assert response.status_code == 200
+    assert 'days' in response.json
+    for day in response.json['days']:
+        assert day['location'] == location

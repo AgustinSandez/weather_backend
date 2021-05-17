@@ -6,6 +6,7 @@ from config import config
 from datetime import datetime
 import requests
 import pytest
+import click
 
 
 def create_app():
@@ -17,17 +18,15 @@ def create_app():
 
     @app.route('/days', methods=['GET'])
     def get_days():
-        days = [ day.json() for day in Day.query.all() ] 
+        days_query = Day.query
+        days = [ day.json() for day in days_query.all() ] 
         return jsonify({'days': days })
 
-    @app.route('/days/<date>', methods=['GET'])
-    def get_day(date):
-        date = datetime.strptime(date, '%Y-%m-%d').date()
-        day = Day.query.filter_by(date=date).first()
-        if day is None:
-            return jsonify({'message': 'Day does not exists'}), 404
-
-        return jsonify({'day': day.json() })
+    @app.route('/days/<location>', methods=['GET'])
+    def get_days_by_location(location):
+        days_query = Day.query.filter_by(location=location)
+        days = [ day.json() for day in days_query.all() ] 
+        return jsonify({'days': days })
 
     @app.cli.command()
     def test():
@@ -35,21 +34,25 @@ def create_app():
         pytest.main(['tests.py'])
 
     @app.cli.command()
-    def getdata():
+    @click.argument("location")
+    def getdata(location):
         """Get data from TuTiempo API"""
         print('Importing days...')
 
-        response = requests.get(config['tutiempo_url'])
+        response = requests.get(config['tutiempo_url'].format(location))
         data = response.json()
         for i in range(7):
+            day = data['day' + str(i+1)]
+            day['location'] = location
             add_day(data['day' + str(i+1)])
 
         print('Done!')
 
     def add_day(day):
         date = datetime.strptime(day['date'], '%Y-%m-%d').date()
+        location = day['location']
 
-        d = Day.query.filter_by(date=date).first()
+        d = Day.query.filter_by(date=date, location=location).first()
         if d is None:
             d = Day()
 

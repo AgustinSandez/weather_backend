@@ -7,6 +7,7 @@ class Day(db.Model):
     __tablename__ = 'days'
 
     date = db.Column(db.Date, primary_key=True)
+    location = db.Column(db.String(10), primary_key=True)
     temperature_max = db.Column(db.Integer)
     temperature_min = db.Column(db.Integer)
     icon = db.Column(db.String(10))
@@ -29,6 +30,7 @@ class Day(db.Model):
 
     def load_from_json(self, day):
         self.date = datetime.strptime(day['date'], '%Y-%m-%d').date()
+        self.location = day['location']
         self.temperature_max = day['temperature_max']
         self.temperature_min = day['temperature_min']
         self.icon = day['icon']
@@ -45,7 +47,8 @@ class Day(db.Model):
 
     def json(self):
             return {
-                'date': self.date,
+                "date": self.date,
+                "location": self.location,
                 "temperature_max": self.temperature_max,
                 "temperature_min": self.temperature_min,
                 "icon": self.icon,
