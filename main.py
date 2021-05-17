@@ -5,6 +5,7 @@ from models import Day
 from config import config
 from datetime import datetime
 import requests
+import pytest
 
 
 def create_app():
@@ -27,6 +28,11 @@ def create_app():
             return jsonify({'message': 'Day does not exists'}), 404
 
         return jsonify({'day': day.json() })
+
+    @app.cli.command()
+    def test():
+        """Run tests"""
+        pytest.main(['tests.py'])
 
     @app.cli.command()
     def getdata():
