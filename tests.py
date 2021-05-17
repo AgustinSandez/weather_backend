@@ -63,4 +63,4 @@ def test_get_fake_day(test_client):
 def test_get_days(test_client):
     response = test_client.get('/days')
     assert response.status_code == 200
-    assert 'days' in response.data
+    assert b'days' in response.data
